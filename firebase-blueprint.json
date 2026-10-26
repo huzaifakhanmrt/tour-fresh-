@@ -1,0 +1,283 @@
+{
+  "entities": {
+    "Admin": {
+      "title": "Admin",
+      "description": "Authorized administrator profiles for M2 Tourism Qatar management console.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "description": "Admin email address" },
+        "displayName": { "type": "string", "description": "Full name or title" },
+        "role": { "type": "string", "enum": ["superadmin", "manager", "operations", "concierge"], "description": "Admin role level" },
+        "active": { "type": "boolean", "description": "Whether administrative access is enabled" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["email", "role", "active"]
+    },
+    "Experience": {
+      "title": "Experience",
+      "description": "Curated luxury tours, safaris, dhow charters, and cultural expeditions.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200, "description": "Tour or experience title" },
+        "subtitle": { "type": "string", "maxLength": 300, "description": "Tour subtitle" },
+        "category": { "type": "string", "description": "Category slug" },
+        "categoryLabel": { "type": "string", "description": "Category display label" },
+        "duration": { "type": "string", "description": "Duration description e.g. 4 - 6 Hours" },
+        "rating": { "type": "number", "description": "Average review rating" },
+        "reviewsCount": { "type": "number", "description": "Number of reviews" },
+        "location": { "type": "string", "description": "Location display text" },
+        "basePriceQar": { "type": "number", "description": "Base price in Qatari Riyals" },
+        "childPriceQar": { "type": "number", "description": "Price per child in QAR" },
+        "infantPriceQar": { "type": "number", "description": "Price per infant in QAR" },
+        "badge": { "type": "string", "description": "Optional promotion or status badge" },
+        "image": { "type": "string", "description": "Primary hero image URL" },
+        "gallery": { "type": "array", "description": "Array of additional photo URLs" },
+        "shortDescription": { "type": "string", "description": "Summary for tour card" },
+        "fullDescription": { "type": "string", "description": "Comprehensive detailed description" },
+        "amenities": { "type": "array", "description": "List of amenities provided" },
+        "vehicle": { "type": "string", "description": "Vehicle description" },
+        "highlights": { "type": "array", "description": "Key bullet highlights" },
+        "itinerary": { "type": "array", "description": "Structured itinerary stops" },
+        "included": { "type": "array", "description": "Inclusions list" },
+        "notIncluded": { "type": "array", "description": "Exclusions list" },
+        "status": { "type": "string", "enum": ["published", "draft", "archived"], "description": "Publication status" },
+        "minGuests": { "type": "number", "description": "Minimum guest requirement" },
+        "maxGuests": { "type": "number", "description": "Maximum guest capacity" },
+        "cancellationPolicy": { "type": "string", "description": "Cancellation terms" },
+        "seoTitle": { "type": "string", "description": "SEO meta title" },
+        "seoDescription": { "type": "string", "description": "SEO meta description" },
+        "createdAt": { "type": "string", "description": "Record creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Record update timestamp" }
+      },
+      "required": ["title", "category", "basePriceQar", "status"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "Customer reservations and concierge itineraries.",
+      "type": "object",
+      "properties": {
+        "bookingRef": { "type": "string", "description": "Unique booking reference code" },
+        "tourId": { "type": "string", "description": "Referenced experience ID" },
+        "tourTitle": { "type": "string", "description": "Experience title snapshot" },
+        "date": { "type": "string", "description": "Tour date in YYYY-MM-DD" },
+        "departureWindow": { "type": "string", "description": "Selected departure time or window" },
+        "guestsCount": { "type": "number", "description": "Total guest count" },
+        "adultsCount": { "type": "number", "description": "Adult guest count" },
+        "childrenCount": { "type": "number", "description": "Children count" },
+        "infantsCount": { "type": "number", "description": "Infants count" },
+        "vehicleType": { "type": "string", "description": "Vehicle choice" },
+        "vehicleId": { "type": "string", "description": "Assigned vehicle ID" },
+        "pickupLocation": { "type": "string", "description": "Pickup spot or address" },
+        "dropoffLocation": { "type": "string", "description": "Dropoff spot or address" },
+        "flightNumber": { "type": "string", "description": "Arrival flight number if applicable" },
+        "guideLanguage": { "type": "string", "description": "Preferred guide language" },
+        "specialRequests": { "type": "string", "description": "Custom guest instructions" },
+        "fullName": { "type": "string", "description": "Guest full name" },
+        "phone": { "type": "string", "description": "Guest contact phone" },
+        "email": { "type": "string", "description": "Guest contact email" },
+        "country": { "type": "string", "description": "Guest country of residence" },
+        "childSeat": { "type": "boolean", "description": "Child safety seat requested" },
+        "gourmetMeal": { "type": "boolean", "description": "Gourmet meal upgrade" },
+        "totalPriceQar": { "type": "number", "description": "Total price in QAR" },
+        "amountPaidQar": { "type": "number", "description": "Amount collected in QAR" },
+        "remainingBalanceQar": { "type": "number", "description": "Pending balance in QAR" },
+        "paymentStatus": { "type": "string", "enum": ["pending", "deposit_paid", "paid", "refunded", "cancelled"], "description": "Payment state" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "in_progress", "completed", "cancelled"], "description": "Booking workflow state" },
+        "internalNotes": { "type": "string", "description": "Concierge and driver internal notes" },
+        "bookingSource": { "type": "string", "enum": ["website", "whatsapp", "concierge", "ota", "phone"], "description": "Channel source" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["bookingRef", "tourId", "date", "fullName", "phone", "email", "totalPriceQar", "status"]
+    },
+    "Location": {
+      "title": "Location",
+      "description": "Designated VIP pickup and drop-off hubs across Qatar.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Location name" },
+        "address": { "type": "string", "description": "Full street address or landmark" },
+        "category": { "type": "string", "enum": ["airport", "hotel", "area", "port", "desert_hub", "custom"], "description": "Category" },
+        "applicableExperiences": { "type": "array", "description": "List of experience IDs or ['all']" },
+        "canPickup": { "type": "boolean", "description": "Allowed for pick-up" },
+        "canDropoff": { "type": "boolean", "description": "Allowed for drop-off" },
+        "extraFeeQar": { "type": "number", "description": "Surcharge if outside central zone" },
+        "isFreePickup": { "type": "boolean", "description": "Whether pickup is complimentary" },
+        "mapLink": { "type": "string", "description": "Google Maps or coordinate link" },
+        "active": { "type": "boolean", "description": "Active in public dropdowns" }
+      },
+      "required": ["name", "category", "active"]
+    },
+    "Vehicle": {
+      "title": "Vehicle",
+      "description": "Executive transportation fleet, desert cruisers, and yachts.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Vehicle model name" },
+        "type": { "type": "string", "enum": ["4x4_safari", "suv_luxury", "sedan_luxury", "van_luxury", "minibus", "bus", "yacht", "dhow", "custom"], "description": "Vehicle class" },
+        "passengerCapacity": { "type": "number", "description": "Max passengers" },
+        "luggageCapacity": { "type": "number", "description": "Suitcase count" },
+        "plateNumber": { "type": "string", "description": "Fleet registration ID" },
+        "driverName": { "type": "string", "description": "Primary assigned chauffeur" },
+        "driverPhone": { "type": "string", "description": "Chauffeur direct phone" },
+        "priceMultiplier": { "type": "number", "description": "Price factor over base" },
+        "fixedAddonQar": { "type": "number", "description": "Fixed addon surcharge" },
+        "active": { "type": "boolean", "description": "Available for booking" }
+      },
+      "required": ["name", "type", "passengerCapacity", "active"]
+    },
+    "PricingRule": {
+      "title": "PricingRule",
+      "description": "Coupons, seasonal rate multipliers, and add-on pricing.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "description": "Promo coupon code" },
+        "title": { "type": "string", "description": "Promotion name" },
+        "type": { "type": "string", "enum": ["percentage", "fixed", "seasonal"], "description": "Discount calculation type" },
+        "value": { "type": "number", "description": "Discount value (% or QAR amount)" },
+        "startDate": { "type": "string", "description": "Valid from date" },
+        "endDate": { "type": "string", "description": "Valid until date" },
+        "minSpendQar": { "type": "number", "description": "Minimum booking amount" },
+        "active": { "type": "boolean", "description": "Currently active" }
+      },
+      "required": ["title", "type", "value", "active"]
+    },
+    "AvailabilityRule": {
+      "title": "AvailabilityRule",
+      "description": "Blackout dates, peak season restrictions, and daily booking cutoffs.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Rule label" },
+        "blackoutDates": { "type": "array", "description": "Array of YYYY-MM-DD dates blocked" },
+        "operatingHours": { "type": "string", "description": "Hours of operations" },
+        "cutoffHoursNotice": { "type": "number", "description": "Notice hours required before booking" },
+        "maxDailyBookings": { "type": "number", "description": "Cap on daily departures" }
+      },
+      "required": ["title"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Customer profiles and history.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Client full name" },
+        "email": { "type": "string", "description": "Client email" },
+        "phone": { "type": "string", "description": "Client phone number" },
+        "country": { "type": "string", "description": "Country of residence" },
+        "vipStatus": { "type": "boolean", "description": "VIP priority client status" },
+        "totalBookings": { "type": "number", "description": "Historical bookings counter" },
+        "totalSpendQar": { "type": "number", "description": "Total spend in QAR" },
+        "notes": { "type": "string", "description": "Concierge private notes" },
+        "lastBookingDate": { "type": "string", "description": "Date of latest booking" }
+      },
+      "required": ["fullName", "email"]
+    },
+    "WebsiteContent": {
+      "title": "WebsiteContent",
+      "description": "Dynamic CMS sections for public website.",
+      "type": "object",
+      "properties": {
+        "section": { "type": "string", "description": "Identifier like homepage, about, contact, settings" },
+        "data": { "type": "object", "description": "Structured CMS key-values" },
+        "updatedAt": { "type": "string", "description": "Last update timestamp" },
+        "updatedBy": { "type": "string", "description": "Admin email who published" }
+      },
+      "required": ["section", "data"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Guest testimonials and ratings.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Reviewer name" },
+        "location": { "type": "string", "description": "Reviewer location / country" },
+        "date": { "type": "string", "description": "Review date" },
+        "rating": { "type": "number", "description": "Star rating 1 to 5" },
+        "text": { "type": "string", "description": "Review testimonial content" },
+        "tour": { "type": "string", "description": "Name of tour taken" },
+        "isApproved": { "type": "boolean", "description": "Approved for public display" },
+        "createdAt": { "type": "string", "description": "Submission timestamp" }
+      },
+      "required": ["name", "rating", "text", "isApproved"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Security audit trail for administrative operations.",
+      "type": "object",
+      "properties": {
+        "action": { "type": "string", "description": "Action performed e.g. update_tour, delete_booking" },
+        "performedBy": { "type": "string", "description": "Admin email who performed action" },
+        "details": { "type": "string", "description": "Action description or payload summary" },
+        "timestamp": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["action", "performedBy", "timestamp"]
+    },
+    "Media": {
+      "title": "Media",
+      "description": "Luxury photography assets, tour banners, vehicle photos, and media library assets.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Asset filename or title" },
+        "url": { "type": "string", "description": "Asset URL or data payload" },
+        "sizeKb": { "type": "number", "description": "Size in kilobytes" },
+        "type": { "type": "string", "description": "MIME type" },
+        "category": { "type": "string", "enum": ["experience", "hero", "vehicle", "logo", "general"], "description": "Asset category" },
+        "dimensions": { "type": "string", "description": "Dimensions string" },
+        "uploadedBy": { "type": "string", "description": "Uploader email" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "usedIn": { "type": "array", "description": "Tour or section IDs" }
+      },
+      "required": ["name", "url", "type", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Authorized administrators list"
+    },
+    "/experiences/{experienceId}": {
+      "schema": { "$ref": "#/entities/Experience" },
+      "description": "Experiences and tours"
+    },
+    "/bookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/Booking" },
+      "description": "Tour reservations and VIP booking requests"
+    },
+    "/locations/{locationId}": {
+      "schema": { "$ref": "#/entities/Location" },
+      "description": "Pickup and drop-off hubs and hotels"
+    },
+    "/vehicles/{vehicleId}": {
+      "schema": { "$ref": "#/entities/Vehicle" },
+      "description": "Fleet vehicles and chauffeurs"
+    },
+    "/pricing_rules/{ruleId}": {
+      "schema": { "$ref": "#/entities/PricingRule" },
+      "description": "Promotional codes and discounts"
+    },
+    "/availability_rules/{ruleId}": {
+      "schema": { "$ref": "#/entities/AvailabilityRule" },
+      "description": "Blackouts and seasonal operating parameters"
+    },
+    "/customers/{customerId}": {
+      "schema": { "$ref": "#/entities/Customer" },
+      "description": "Customer profiles and booking records"
+    },
+    "/website_content/{sectionId}": {
+      "schema": { "$ref": "#/entities/WebsiteContent" },
+      "description": "CMS website configuration and copy"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Customer testimonials"
+    },
+    "/media_library/{mediaId}": {
+      "schema": { "$ref": "#/entities/Media" },
+      "description": "Central media library assets for experiences, vehicles, and website CMS"
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Security audit history"
+    }
+  }
+}

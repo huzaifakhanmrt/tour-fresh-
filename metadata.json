@@ -1,0 +1,8 @@
+{
+  "name": "MZ Tourism Qatar | Luxury Tours & Concierge",
+  "description": "Curated desert safaris, private royal dhow cruises, and elite VIP cultural expeditions across Doha and Qatar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

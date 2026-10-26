@@ -1,0 +1,139 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Admin authorization: allowlisted email or admins collection doc
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'huzaifakhanmrt@gmail.com' ||
+        (request.auth.token.email != null && request.auth.token.email.lower() == 'huzaifakhanmrt@gmail.com') ||
+        (exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true) ||
+        (request.auth.token.email != null &&
+         exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower())) &&
+         get(/databases/$(database)/documents/admins/$(request.auth.token.email.lower())).data.active == true)
+      );
+    }
+
+    // Connection testing document
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Admins Collection: protected with self-profile verification
+    match /admins/{adminId} {
+      allow get: if isSignedIn() && (
+        request.auth.uid == adminId ||
+        (request.auth.token.email != null && request.auth.token.email.lower() == adminId.lower()) ||
+        isAdmin()
+      );
+      allow list, write: if isAdmin();
+    }
+
+    // Media Library: public catalog read, authorized admin write & update
+    match /media_library/{mediaId} {
+      allow read: if true;
+      allow create, update: if isAdmin() &&
+                               isValidId(mediaId) &&
+                               incoming().name is string &&
+                               incoming().name.size() > 0 &&
+                               incoming().name.size() <= 200 &&
+                               incoming().url is string &&
+                               incoming().type is string;
+      allow delete: if isAdmin();
+    }
+
+    // Experiences (Tours): public catalog read, admin write
+    match /experiences/{experienceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Bookings: public create, admin full management, guest can view own
+    match /bookings/{bookingId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if incoming().bookingRef is string &&
+                       incoming().tourId is string &&
+                       incoming().fullName is string &&
+                       incoming().phone is string &&
+                       incoming().email is string &&
+                       incoming().totalPriceQar is number;
+      allow get: if isAdmin() || (
+        isSignedIn() && resource.data.email == request.auth.token.email
+      );
+    }
+
+    // Locations: public read so booking modal loads hubs, admin write
+    match /locations/{locationId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Fleet Vehicles: public read for booking options, admin write
+    match /vehicles/{vehicleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Pricing Rules & Promo Codes: public read for checkout validation, admin write
+    match /pricing_rules/{ruleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Availability Rules: public read for blackout verification, admin write
+    match /availability_rules/{ruleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Customers: strictly PII protected
+    match /customers/{customerId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Website CMS Content: public read, admin write
+    match /website_content/{sectionId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Guest Reviews: public read, public create pending review, admin moderate
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if incoming().name is string &&
+                       incoming().rating is number &&
+                       incoming().text is string;
+      allow update, delete: if isAdmin();
+    }
+
+    // Audit Logs: internal security trail
+    match /audit_logs/{logId} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
+  }
+}
